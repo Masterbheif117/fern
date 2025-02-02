@@ -1,42 +1,31 @@
-"use client"
+// page.tsx
+"use client";
 
-import Image from "next/image"
-import Link from "next/link"
-import { useState, useEffect } from "react"
-import { ChevronLeft } from "lucide-react"
-import type React from "react"
+import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { ChevronLeft } from "lucide-react";
+import type React from "react";
 
 export default function Diet() {
-  const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [dietaryRestrictions, setDietaryRestrictions] = useState("")
-  const [calorieGoal, setCalorieGoal] = useState("")
-  const [hasSubmittedPreferences, setHasSubmittedPreferences] = useState(false)
+  // Meal plan state stores a JSON object with keys as cuisines and values as arrays of meal recipes.
+  const [mealPlan, setMealPlan] = useState<Record<string, any[]>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [dietaryRestrictions, setDietaryRestrictions] = useState("");
+  const [calorieGoal, setCalorieGoal] = useState("");
+  const [hasSubmittedPreferences, setHasSubmittedPreferences] = useState(false);
 
-  const [height, setHeight] = useState("")
-  const [weight, setWeight] = useState("")
-  const [age, setAge] = useState("")
-  const [goal, setGoal] = useState("")
-  const [cuisinePreferences, setCuisinePreferences] = useState<string[]>([])
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [age, setAge] = useState("");
+  const [goal, setGoal] = useState("");
+  const [cuisinePreferences, setCuisinePreferences] = useState<string[]>([]);
 
-  useEffect(() => {
-    const currentUser = localStorage.getItem("currentUser")
-    if (currentUser) {
-      const savedProfile = JSON.parse(localStorage.getItem(`profile_${currentUser}`) || "{}")
-      if (savedProfile) {
-        setHeight(savedProfile.height || "")
-        setWeight(savedProfile.weight || "")
-        setAge(savedProfile.age || "")
-        setGoal(savedProfile.goal || "")
-        setCuisinePreferences(savedProfile.cuisinePreferences || [])
-      }
-    }
-  }, [])
-
+  // Map for cuisine flags
   const cuisineFlagMap: { [key: string]: string } = {
     Chinese: "/china.png",
     French: "/france.png",
-    Greek: "/greece.png",
+    Mediterranean: "/mediterranean.png",
     Indian: "/india.png",
     Italian: "/italy.png",
     Japanese: "/japan.png",
@@ -44,7 +33,7 @@ export default function Diet() {
     Korean: "/south-korea.png",
     Thai: "/thailand.png",
     American: "/united-states.png",
-  }
+  };
 
   const dietaryOptions = [
     "No Restrictions",
@@ -55,13 +44,29 @@ export default function Diet() {
     "Dairy-Free",
     "Keto-Friendly",
     "Low-Carb",
-  ]
+  ];
 
+  // On mount, load profile data from localStorage.
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      const savedProfile = JSON.parse(localStorage.getItem(`profile_${currentUser}`) || "{}");
+      if (savedProfile) {
+        setHeight(savedProfile.height || "");
+        setWeight(savedProfile.weight || "");
+        setAge(savedProfile.age || "");
+        setGoal(savedProfile.goal || "");
+        setCuisinePreferences(savedProfile.cuisinePreferences || []);
+      }
+    }
+  }, []);
+
+  // Submit handler to generate the meal plan.
   const handlePreferencesSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!dietaryRestrictions || !calorieGoal) return
+    e.preventDefault();
+    if (!dietaryRestrictions || !calorieGoal) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const response = await fetch("/api/meal", {
         method: "POST",
@@ -78,17 +83,18 @@ export default function Diet() {
           age,
           goal,
         }),
-      })
+      });
 
-      const data = await response.json()
-      setMessages([data])
-      setHasSubmittedPreferences(true)
+      // Since the API outputs valid JSON, we parse it directly.
+      const data = await response.json();
+      setMealPlan(data);
+      setHasSubmittedPreferences(true);
     } catch (error) {
-      console.error("Error:", error)
+      console.error("Error:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen relative bg-gradient-to-b from-[#97a683]/60 via-[#97a683]/30 to-white text-[#2f2226] font-mono overflow-hidden">
@@ -105,10 +111,6 @@ export default function Diet() {
       />
 
       <header className="flex justify-between items-center fixed top-6 left-6 right-6 z-10">
-        {/* 
-          The Link element now includes the "block", "w-fit", and "cursor-pointer" classes 
-          to ensure that the entire button (including its padding) is clickable.
-        */}
         <Link
           href="/dashboard"
           className="block w-fit cursor-pointer flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
@@ -122,7 +124,9 @@ export default function Diet() {
         <div className="w-full">
           {!hasSubmittedPreferences ? (
             <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-md border border-[#97a683]/30 rounded-3xl p-8 shadow-lg">
-              <h1 className="text-3xl font-thin mb-6 text-center text-[#2f2226]">Custom Meal Plan Generator</h1>
+              <h1 className="text-3xl font-thin mb-6 text-center text-[#2f2226]">
+                Custom Meal Plan Generator
+              </h1>
               <form onSubmit={handlePreferencesSubmit} className="space-y-6">
                 <div>
                   <label className="block mb-2 text-[#2f2226] font-thin">Daily Calorie Goal</label>
@@ -156,7 +160,9 @@ export default function Diet() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-[#2f2226] font-thin">Preferred Cuisines (From Profile)</label>
+                  <label className="block mb-2 text-[#2f2226] font-thin">
+                    Preferred Cuisines (From Profile)
+                  </label>
                   <div className="p-2 border border-[#97a683]/30 rounded-lg bg-white/50 text-[#2f2226] flex flex-wrap gap-2">
                     {cuisinePreferences.length > 0 ? (
                       cuisinePreferences.map((cuisine) => (
@@ -188,11 +194,10 @@ export default function Diet() {
             </div>
           ) : (
             <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-md border border-[#97a683]/30 rounded-3xl p-8 shadow-lg">
-              <h1 className="text-3xl font-thin mb-6 text-center text-[#2f2226]">Your PCOS Meal Plan</h1>
-
-              <div className="flex flex-wrap gap-4 mb-6">
-                {cuisinePreferences.map((cuisine) => (
-                  <div key={cuisine} className="flex items-center space-x-2">
+              <h1 className="text-3xl font-thin mb-6 text-center text-[#2f2226]">Your Adapted Meal Plan</h1>
+              {cuisinePreferences.map((cuisine) => (
+                <div key={cuisine} className="mb-8">
+                  <div className="flex items-center space-x-2 mb-4">
                     <Image
                       src={cuisineFlagMap[cuisine] || "/placeholder.svg"}
                       alt={`${cuisine} Flag`}
@@ -202,21 +207,27 @@ export default function Diet() {
                     />
                     <span className="text-xl font-thin text-[#2f2226]">{cuisine}</span>
                   </div>
-                ))}
-              </div>
-
-              <div className="space-y-6 mb-4">
-                {messages.map((message, index) => (
-                  <div key={index} className="p-4 rounded-lg bg-white/50 text-[#2f2226] border border-[#97a683]/30">
-                    <p className="text-base whitespace-pre-line font-thin">{message.content}</p>
+                  <div className="space-y-4">
+                    {mealPlan[cuisine] && mealPlan[cuisine].map((meal, index) => (
+                      <div key={index} className="p-4 rounded-lg bg-white/50 text-[#2f2226] border border-[#97a683]/30">
+                        <h2 className="font-bold text-lg">
+                          {meal.mealName} — {meal.totalCalories} kcal
+                        </h2>
+                        <p><strong>Ingredients:</strong> {meal.ingredients}</p>
+                        <p><strong>Calories per Serving:</strong> {meal.caloriesPerServing}</p>
+                        <p>
+                          <strong>Macros:</strong> Protein: {meal.macros.protein}, Carbs: {meal.macros.carbs}, Fats: {meal.macros.fats}
+                        </p>
+                        <p><strong>Note:</strong> {meal.note}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-
+                </div>
+              ))}
               <button
                 onClick={() => {
-                  setHasSubmittedPreferences(false)
-                  setMessages([])
+                  setHasSubmittedPreferences(false);
+                  setMealPlan({});
                 }}
                 className="w-full flex items-center justify-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
               >
@@ -227,5 +238,5 @@ export default function Diet() {
         </div>
       </main>
     </div>
-  )
+  );
 }

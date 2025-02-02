@@ -1,52 +1,74 @@
-"use client"
+// page.tsx
+"use client";
 
-import { useEffect, useState } from "react"
-import { ChevronLeft } from "lucide-react"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
+
+interface Exercise {
+  name: string;
+  sets: number;
+  reps: string;
+  rest: string;
+  intensity: string;
+}
+
+interface DayPlan {
+  bodyParts: string;
+  exercises: Exercise[];
+  notes: string;
+}
+
+interface WorkoutPlan {
+  workoutSplit: string;
+  schedule: {
+    [day: string]: DayPlan;
+  };
+  recovery: string;
+}
 
 export default function Workout() {
-  const [workoutPlan, setWorkoutPlan] = useState<string>("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [daysPerWeek, setDaysPerWeek] = useState("")
-  const [timePerDay, setTimePerDay] = useState("")
-  const [exersizeConstraints, setExersizeConstraints] = useState("")
-  const [hasSubmittedPreferences, setHasSubmittedPreferences] = useState(false)
+  // The workoutPlan state holds the structured JSON response.
+  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [daysPerWeek, setDaysPerWeek] = useState("");
+  const [timePerDay, setTimePerDay] = useState("");
+  const [exersizeConstraints, setExersizeConstraints] = useState("");
+  const [hasSubmittedPreferences, setHasSubmittedPreferences] = useState(false);
 
   // User profile data
-  const [height, setHeight] = useState("")
-  const [weight, setWeight] = useState("")
-  const [age, setAge] = useState("")
-  const [goal, setGoal] = useState("")
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [age, setAge] = useState("");
+  const [goal, setGoal] = useState("");
 
   useEffect(() => {
-    // Load the user's profile data
-    const currentUser = localStorage.getItem("currentUser")
+    // Load the user's profile data from localStorage.
+    const currentUser = localStorage.getItem("currentUser");
     if (currentUser) {
-      const savedProfile = JSON.parse(localStorage.getItem(`profile_${currentUser}`) || "{}")
-
+      const savedProfile = JSON.parse(localStorage.getItem(`profile_${currentUser}`) || "{}");
       if (savedProfile) {
-        setHeight(savedProfile.height || "")
-        setWeight(savedProfile.weight || "")
-        setAge(savedProfile.age || "")
-        setGoal(savedProfile.goal || "")
+        setHeight(savedProfile.height || "");
+        setWeight(savedProfile.weight || "");
+        setAge(savedProfile.age || "");
+        setGoal(savedProfile.goal || "");
       }
     }
-  }, [])
+  }, []);
 
-  // Options for the dropdown
   const constraintOptions = [
     "Gym Access (Full Equipment)",
     "Home Gym (Bands & Dumbbells)",
     "Dumbbells Only",
     "Bodyweight Only",
     "Resistance Bands Only",
-  ]
+  ];
 
   const handlePreferencesSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!daysPerWeek || !timePerDay || !exersizeConstraints) return
+    e.preventDefault();
+    if (!daysPerWeek || !timePerDay || !exersizeConstraints) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -63,17 +85,17 @@ export default function Workout() {
           age,
           goal,
         }),
-      })
+      });
 
-      const data = await response.json()
-      setWorkoutPlan(data.content)
-      setHasSubmittedPreferences(true)
+      const data = await response.json();
+      setWorkoutPlan(data);
+      setHasSubmittedPreferences(true);
     } catch (error) {
-      console.error("Error:", error)
+      console.error("Error:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div
@@ -85,7 +107,7 @@ export default function Workout() {
         backgroundPosition: "center",
       }}
     >
-    <header className="flex justify-between items-center fixed top-6 left-6 right-6 z-10">
+      <header className="flex justify-between items-center fixed top-6 left-6 right-6 z-10">
         <Link
           href="/dashboard"
           className="flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
@@ -93,7 +115,8 @@ export default function Workout() {
           <ChevronLeft className="mr-2" size={20} />
           Back to Dashboard
         </Link>
-        </header>
+      </header>
+
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
@@ -118,7 +141,7 @@ export default function Workout() {
                 </label>
                 <input
                   type="number"
-                  min="0"
+                  min="1"
                   max="7"
                   value={daysPerWeek}
                   onChange={(e) => setDaysPerWeek(e.target.value)}
@@ -133,7 +156,7 @@ export default function Workout() {
                 </label>
                 <input
                   type="number"
-                  min="0"
+                  min="10"
                   max="180"
                   value={timePerDay}
                   onChange={(e) => setTimePerDay(e.target.value)}
@@ -170,28 +193,55 @@ export default function Workout() {
               </button>
             </form>
           </>
-        ) : (
+        ) : workoutPlan ? (
           <>
-            <h1 className="text-3xl font-mono font-thin mb-6 text-[#2f2226] text-center">Your Workout Plan</h1>
-
-            <div className="mb-6 max-h-[60vh] overflow-y-auto pr-4">
-              <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm border border-white border-opacity-30 rounded-2xl p-6">
-                <pre className="font-mono font-thin text-[#2f2226] whitespace-pre-wrap">{workoutPlan}</pre>
+            <h1 className="text-3xl font-mono font-thin mb-6 text-[#2f2226] text-center">
+              Your Workout Plan
+            </h1>
+            <div className="mb-6">
+              <p className="font-mono font-thin text-[#2f2226] mb-4">
+                <strong>Workout Split:</strong> {workoutPlan.workoutSplit}
+              </p>
+              {Object.entries(workoutPlan.schedule).map(([day, details]) => (
+                <div key={day} className="mb-8 p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30">
+                  <h2 className="text-xl font-mono font-bold text-[#2f2226] mb-2">
+                    <strong>{day}</strong>
+                  </h2>
+                  <p className="font-mono font-thin text-[#2f2226]">
+                    <strong>Body Parts Targeted:</strong> {details.bodyParts}
+                  </p>
+                  <div className="mt-2">
+                    <strong className="font-mono font-thin text-[#2f2226]">Exercises:</strong>
+                    <ul className="list-disc list-inside mt-1">
+                      {details.exercises.map((exercise, index) => (
+                        <li key={index} className="font-mono font-thin text-[#2f2226]">
+                          {exercise.name} – {exercise.sets} sets of {exercise.reps} reps, rest: {exercise.rest}, intensity: {exercise.intensity}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <p className="mt-2 font-mono font-thin text-[#2f2226]">
+                    <strong>Notes:</strong> {details.notes}
+                  </p>
+                </div>
+              ))}
+              <div className="p-4 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30">
+                <h2 className="text-xl font-mono font-bold text-[#2f2226] mb-2">Recovery & Stress Management</h2>
+                <p className="font-mono font-thin text-[#2f2226]">{workoutPlan.recovery}</p>
               </div>
             </div>
-
             <button
               onClick={() => {
-                setHasSubmittedPreferences(false)
-                setWorkoutPlan("")
+                setHasSubmittedPreferences(false);
+                setWorkoutPlan(null);
               }}
               className="w-full bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-8 rounded-full hover:bg-opacity-80 transition-colors duration-300"
             >
               Generate New Plan
             </button>
           </>
-        )}
+        ) : null}
       </div>
     </div>
-  )
+  );
 }

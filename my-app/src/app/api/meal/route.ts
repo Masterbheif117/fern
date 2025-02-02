@@ -1,14 +1,23 @@
+// route.ts
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
 const openai = new OpenAI({
-    apiKey: ""
+  apiKey: ""
 });
 
-const getSystemMessage = (dietaryRestrictions: string, calorieGoal: string, cuisinePreferences: string[], height: string, weight: string, age: string, goal: string): string => {
-    return `You are a PCOS nutrition specialist. Create a detailed meal plan following these EXACT requirements:
+const getSystemMessage = (
+  dietaryRestrictions: string, 
+  calorieGoal: string, 
+  cuisinePreferences: string[], 
+  height: string, 
+  weight: string, 
+  age: string, 
+  goal: string
+): string => {
+  return `You are a PCOS nutrition specialist. Create a detailed meal plan in JSON format (and output only valid JSON, without any additional text) following these EXACT requirements:
 
-    ### **USER PROFILE:**
+### USER PROFILE:
 - Height: ${height} in
 - Weight: ${weight} lb
 - Age: ${age}
@@ -17,66 +26,59 @@ const getSystemMessage = (dietaryRestrictions: string, calorieGoal: string, cuis
 - Dietary Restrictions: ${dietaryRestrictions}
 - Preferred Cuisines: ${cuisinePreferences.join(", ")}
 
-1. Create a ${cuisinePreferences.join(", ")}-style meal plan specifically designed for someone with PCOS, focusing on:
-   - Blood sugar balance
-   - Anti-inflammatory foods
-   - Hormone-supportive nutrients
-   - Appropriate portion sizes
+Instructions:
+1. For each preferred cuisine (for example, ${cuisinePreferences.join(", ")}), output exactly 3 authentic meal recipes.
+2. Each meal recipe must include:
+   - "mealName": Name of the traditional dish.
+   - "totalCalories": A number representing total calories.
+   - "ingredients": A string listing ingredients with exact quantities (adapted to be PCOS-friendly while preserving authenticity).
+   - "caloriesPerServing": Calories per serving as a number.
+   - "macros": An object with keys "protein", "carbs", and "fats" (each a string indicating quantity, e.g., "20g").
+   - "note": A small note explaining why this adapted recipe is beneficial for hormonal balance and anti-inflammatory benefits (do not use the term "PCOS" in the note).
+3. The final JSON object must have keys corresponding to each cuisine with an array of 3 meal recipes.
 
-2. The plan MUST include:
-   - 3 meals per day
-   - EVERY meal MUST be authentic ${cuisinePreferences.join(", ")} cuisine
-   - Total daily calories: ${calorieGoal}
-   - Dietary restrictions: ${dietaryRestrictions}
-   - The total meal plan should contain **9 meals (3 per selected cuisine)**.  
-   - Meals must be authentic but **adapted for PCOS** to support **hormonal balance, insulin regulation, and anti-inflammatory benefits**.
+Example JSON format:
+{
+  "Chinese": [
+    {
+      "mealName": "Example Dish",
+      "totalCalories": 400,
+      "ingredients": "ingredient1: quantity, ingredient2: quantity, ...",
+      "caloriesPerServing": 200,
+      "macros": { "protein": "20g", "carbs": "30g", "fats": "10g" },
+      "note": "This dish has been adapted to support hormonal balance by..."
+    },
+    ...
+  ],
+  "Italian": [ ... ]
+}
 
-
-3. MANDATORY FORMAT FOR RESPONSE:
-
-   DETAILED ${cuisinePreferences.join(", ")} MEAL PLANS:
-   [For each meal provide:
-   - Name of traditional ${cuisinePreferences.join(", ")} dish
-   - Total calories AT THE TOP NEXT TO THE MEAL NAME HEADER
-   - Ingredients with exact quantities (adapted to be PCOS-friendly while maintaining authenticity)
-   - Calories per serving
-   - Macronutrient breakdown (protein, carbs, healthy fats)]
-
-   All meals MUST be:
-   - AUTHENTIC ${cuisinePreferences.join(", ")} CUISINE
-   - Modified to be PCOS-friendly while maintaining cultural authenticity
-   - Anti-inflammatory
-   - Insulin conscious
-   - Rich in fiber
-   - Include adequate protein
-   - Include healthy fats
-   - Meals must include **high-fiber, low-glycemic carbohydrates, healthy fats, and lean proteins**.  
-   - **Avoid inflammatory ingredients** such as refined sugars, trans fats, and processed foods.  
-   - **Ensure portion control and balance macros** for each meal.  
-   - INCLUDE A SMALL NOTE WHY THIS MEAL IS BETTER FOR PCOS INDIVIDUALS COMAPRED TO THE ORIGINAL RECIPE DO NOT USE "PCOS" IN YOUR RESPONSE
-
-   Note: Each dish should be a genuine ${cuisinePreferences.join(", ")} recipe that has been thoughtfully adapted for PCOS management.`;
+Remember: Output ONLY valid JSON with no extra text.`;
 };
 
 export async function POST(req: Request) {
-    try {
-        const { messages, dietaryRestrictions, calorieGoal, cuisinePreferences, height, weight, age, goal } = await req.json();        const systemMessage = {
-            role: "system",
-            content: getSystemMessage(dietaryRestrictions, calorieGoal, cuisinePreferences, height, weight, age, goal)        };
+  try {
+    const { messages, dietaryRestrictions, calorieGoal, cuisinePreferences, height, weight, age, goal } = await req.json();
+    
+    const systemMessage = {
+      role: "system",
+      content: getSystemMessage(dietaryRestrictions, calorieGoal, cuisinePreferences, height, weight, age, goal)
+    };
 
-        const enhancedMessages = [systemMessage, ...messages];
+    const enhancedMessages = [systemMessage, ...messages];
 
-        const completion = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: enhancedMessages,
-        });
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: enhancedMessages,
+    });
 
-        return NextResponse.json(completion.choices[0].message);
-    } catch (error) {
-        console.error('Error in chat API:', error);
-        return NextResponse.json(
-            { error: 'Failed to process chat request' }, 
-            { status: 500 }
-        );
-    }
+    // Return the JSON response directly.
+    return NextResponse.json(JSON.parse(completion.choices[0].message.content));
+  } catch (error) {
+    console.error('Error in chat API:', error);
+    return NextResponse.json(
+      { error: 'Failed to process chat request' },
+      { status: 500 }
+    );
+  }
 }
