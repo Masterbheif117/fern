@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client"
 
 import { useState } from "react"
@@ -95,7 +96,7 @@ export default function SignupPage() {
           </button>
         </form>
         {error && <p className="text-red-300 font-mono font-thin text-center mt-4">{error}</p>}
-        {success && <p className="text-[#97a683] font-mono font-thin text-center mt-4">{success}</p>}
+        {success && <p className="text-[#ffffff] font-mono font-thin text-center mt-4">{success}</p>}
         <p className="text-white font-mono font-thin text-center mt-6 text-sm opacity-70">
           Already have an account?{" "}
           <a href="/login" className="underline hover:opacity-80 transition-opacity duration-300">
