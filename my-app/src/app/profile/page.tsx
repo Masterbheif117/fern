@@ -2,20 +2,18 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ChevronDown } from "lucide-react"
 
 export default function ProfilePage() {
-  const [username, setUsername] = useState("") // Logged-in user
-  const [height, setHeight] = useState("")
+  const [username, setUsername] = useState("")
+  const [height, setHeight] = useState({ feet: "", inches: "" })
   const [weight, setWeight] = useState("")
   const [age, setAge] = useState("")
   const [dietaryRestriction, setDietaryRestriction] = useState("No Restrictions")
-  const [goal, setGoal] = useState("") // "Gain Weight" or "Lose Weight"
+  const [goal, setGoal] = useState("")
   const [cuisinePreferences, setCuisinePreferences] = useState<string[]>([])
   const [activityHistory, setActivityHistory] = useState("")
   const router = useRouter()
 
-  // Cuisine options
   const cuisineOptions = [
     "Italian",
     "Mexican",
@@ -30,7 +28,6 @@ export default function ProfilePage() {
   ]
 
   useEffect(() => {
-    // Get the logged-in user
     const currentUser = localStorage.getItem("currentUser")
     if (!currentUser) {
       router.push("/login")
@@ -38,10 +35,12 @@ export default function ProfilePage() {
     }
     setUsername(currentUser)
 
-    // Load saved profile data
     const savedProfile = JSON.parse(localStorage.getItem(`profile_${currentUser}`) || "{}")
     if (savedProfile) {
-      setHeight(savedProfile.height || "")
+      setHeight({
+        feet: savedProfile.height?.feet || "",
+        inches: savedProfile.height?.inches || "",
+      })
       setWeight(savedProfile.weight || "")
       setAge(savedProfile.age || "")
       setDietaryRestriction(savedProfile.dietaryRestriction || "No Restrictions")
@@ -49,9 +48,8 @@ export default function ProfilePage() {
       setCuisinePreferences(savedProfile.cuisinePreferences || [])
       setActivityHistory(savedProfile.activityHistory || "")
     }
-  }, [router]) // Added router to dependencies
+  }, [router])
 
-  // Save profile when any field changes
   useEffect(() => {
     if (username) {
       localStorage.setItem(
@@ -71,7 +69,6 @@ export default function ProfilePage() {
         backgroundPosition: "center",
       }}
     >
-      {/* Decorative line frame overlay */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
@@ -83,18 +80,29 @@ export default function ProfilePage() {
       />
 
       <div className="bg-white bg-opacity-15 backdrop-filter backdrop-blur-md border border-white border-opacity-30 rounded-3xl p-8 max-w-lg w-full mx-auto relative z-10">
-        <h1 className="text-3xl font-mono font-thin mb-6 text-[#2f2226] text-center">Your Profile</h1>
+        <h1 className="text-3xl font-mono font-thin mb-6 text-[#2f2226] text-center">User Profile</h1>
 
-        {/* Height Input */}
-        <label className="block mb-2 font-mono font-thin text-[#2f2226]">Height (ft'in):</label>
-        <input
-          type="number"
-          value={height}
-          onChange={(e) => setHeight(e.target.value)}
-          className="border border-[#2f2226] bg-white bg-opacity-50 p-2 w-full mb-4 rounded-md font-mono font-thin text-[#2f2226]"
-        />
+        <div className="flex space-x-2 mb-4">
+          <div className="flex-1">
+            <label className="block mb-2 font-mono font-thin text-[#2f2226]">Height (ft):</label>
+            <input
+              type="number"
+              value={height.feet}
+              onChange={(e) => setHeight({ ...height, feet: e.target.value })}
+              className="border border-[#2f2226] bg-white bg-opacity-50 p-2 w-full rounded-md font-mono font-thin text-[#2f2226]"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block mb-2 font-mono font-thin text-[#2f2226]">Height (in):</label>
+            <input
+              type="number"
+              value={height.inches}
+              onChange={(e) => setHeight({ ...height, inches: e.target.value })}
+              className="border border-[#2f2226] bg-white bg-opacity-50 p-2 w-full rounded-md font-mono font-thin text-[#2f2226]"
+            />
+          </div>
+        </div>
 
-        {/* Weight Input */}
         <label className="block mb-2 font-mono font-thin text-[#2f2226]">Weight (lb):</label>
         <input
           type="number"
@@ -103,7 +111,6 @@ export default function ProfilePage() {
           className="border border-[#2f2226] bg-white bg-opacity-50 p-2 w-full mb-4 rounded-md font-mono font-thin text-[#2f2226]"
         />
 
-        {/* Age Input */}
         <label className="block mb-2 font-mono font-thin text-[#2f2226]">Age:</label>
         <input
           type="number"
@@ -112,7 +119,6 @@ export default function ProfilePage() {
           className="border border-[#2f2226] bg-white bg-opacity-50 p-2 w-full mb-4 rounded-md font-mono font-thin text-[#2f2226]"
         />
 
-        {/* Dietary Restrictions Dropdown */}
         <label className="block mb-2 font-mono font-thin text-[#2f2226]">Dietary Restriction:</label>
         <div className="relative">
           <select
@@ -129,10 +135,8 @@ export default function ProfilePage() {
             <option>Keto-Friendly</option>
             <option>Low-Carb</option>
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2f2226]" />
         </div>
 
-        {/* Goal: Gain or Lose Weight */}
         <label className="block mb-2 font-mono font-thin text-[#2f2226]">Goal:</label>
         <div className="mb-4 flex space-x-4">
           <button
@@ -149,33 +153,31 @@ export default function ProfilePage() {
           </button>
         </div>
 
-        {/* Cuisine Preferences (Multi-Select) */}
         <label className="block mb-2 font-mono font-thin text-[#2f2226]">Cuisine Preferences (Select up to 3):</label>
-        <div className="relative">
-          <select
-            multiple
-            value={cuisinePreferences}
-            onChange={(e) => {
-              const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value)
-              if (selectedOptions.length <= 3) {
-                setCuisinePreferences(selectedOptions)
-              }
-            }}
-            className="border border-[#2f2226] bg-white bg-opacity-50 p-2 w-full mb-4 rounded-md font-mono font-thin text-[#2f2226]"
-          >
-            {cuisineOptions.map((cuisine) => (
-              <option key={cuisine} value={cuisine}>
-                {cuisine}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2f2226]" />
+        <div className="flex flex-wrap gap-2 mb-4">
+          {cuisineOptions.map((cuisine) => (
+            <button
+              key={cuisine}
+              onClick={() => {
+                if (cuisinePreferences.includes(cuisine)) {
+                  setCuisinePreferences(cuisinePreferences.filter((c) => c !== cuisine))
+                } else if (cuisinePreferences.length < 3) {
+                  setCuisinePreferences([...cuisinePreferences, cuisine])
+                }
+              }}
+              className={`px-3 py-1 rounded-full font-mono font-thin text-sm ${
+                cuisinePreferences.includes(cuisine)
+                  ? "bg-[#2f2226] text-white"
+                  : "bg-white bg-opacity-50 text-[#2f2226]"
+              }`}
+            >
+              {cuisine}
+            </button>
+          ))}
         </div>
 
-        {/* Success Message */}
         <p className="text-white font-mono font-thin mb-4">Profile data is automatically saved!</p>
 
-        {/* Back to Dashboard */}
         <button
           onClick={() => router.push("/dashboard")}
           className="w-full bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-8 rounded-full hover:bg-opacity-80 transition-colors duration-300"

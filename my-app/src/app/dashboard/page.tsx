@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { User, LogOut, Utensils, Dumbbell, Calendar, ChevronLeft } from "lucide-react"
+import { User, LogOut, ChevronLeft } from "lucide-react"
+import Image from "next/image"
 import type React from "react"
 
 export default function NewDashboard() {
@@ -42,7 +43,7 @@ export default function NewDashboard() {
       href={href}
       className="flex flex-col items-center justify-center p-6 backdrop-blur-md bg-white bg-opacity-20 rounded-3xl shadow-lg hover:bg-opacity-30 transition-all duration-300 border border-[#97a683]/30"
     >
-      <div className="text-4xl mb-4 text-[#2f2226]">{icon}</div>
+      <div className="mb-4 text-[#2f2226] w-12 h-12 relative">{icon}</div>
       <h2 className="text-xl font-mono font-thin text-[#2f2226]">{title}</h2>
     </Link>
   )
@@ -79,9 +80,42 @@ export default function NewDashboard() {
       <main className="flex-grow flex flex-col items-center justify-center p-8">
         <h1 className="text-4xl font-mono font-thin text-[#2f2226] mb-12 text-center">Welcome, {username}!</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 w-full max-w-4xl">
-          <DashboardBox title="Meal Planner" icon={<Utensils />} href="/meal" />
-          <DashboardBox title="Fitness Planner" icon={<Dumbbell />} href="/workout" />
-          <DashboardBox title="Symptom Tracker" icon={<Calendar />} href="/calendar" />
+          <DashboardBox
+            title="Meal Planner"
+            icon={
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/carrot-KfqyYUcVLNCEUk5Hm7pdcTErGFD10r.png"
+                alt="Meal Planner"
+                fill
+                className="object-contain"
+              />
+            }
+            href="/meal"
+          />
+          <DashboardBox
+            title="Fitness Planner"
+            icon={
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/dumbell-Rl0jCNTeAK7unQr1jLNjvUqpKKcekT.png"
+                alt="Fitness Planner"
+                fill
+                className="object-contain"
+              />
+            }
+            href="/workout"
+          />
+          <DashboardBox
+            title="Symptom Tracker"
+            icon={
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/notebook-h42318KitlAVpEFWTBDPevtwQnGnsR.png"
+                alt="Symptom Tracker"
+                fill
+                className="object-contain"
+              />
+            }
+            href="/calendar"
+          />
         </div>
         <Link
           href="/profile"
