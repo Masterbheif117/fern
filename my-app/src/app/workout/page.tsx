@@ -145,7 +145,7 @@ const Carousel = ({ items }: { items: JSX.Element[] }) => {
 
 const Card = ({ card, index }: { card: Card; index: number }) => {
   return (
-    <div className="rounded-3xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg text-[#2f2226] h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10 p-6 font-mono font-thin">
+    <div className="rounded-3xl bg-[#f5f5dc] text-[#2f2226] h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10 p-6 font-mono font-thin">
       <h3 className="text-xl md:text-2xl mb-4">{card.category}</h3>
       <h4 className="text-lg md:text-xl mb-2">{card.title}</h4>
       <div className="overflow-y-auto flex-grow text-[#2f2226]">{card.content}</div>
@@ -323,7 +323,7 @@ export default function Workout() {
                     content: (
                       <div className="space-y-4 text-sm md:text-base">
                         <div>
-                          <strong className="text-[#2f2226]">Exercises:</strong>
+                          <strong className="text-white">Exercises:</strong>
                           <ul className="list-disc list-inside mt-1">
                             {details.exercises.map((exercise, idx) => (
                               <li key={idx}>
