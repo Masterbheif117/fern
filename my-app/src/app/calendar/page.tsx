@@ -374,7 +374,7 @@ export default function Dashboard() {
                 value={physicalNotes}
                 onChange={(e) => setPhysicalNotes(e.target.value)}
                 placeholder="Log your physical notes for this day such as cramps, nausea, breakouts, etc."
-                className="min-h-[250px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
+                className="min-h-[225px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
               />
             </div>
             <div>
@@ -383,7 +383,7 @@ export default function Dashboard() {
                 value={emotionalNotes}
                 onChange={(e) => setEmotionalNotes(e.target.value)}
                 placeholder="Log your emotional notes for this day such as mood swings, hormonal imbalances, etc."
-                className="min-h-[250px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
+                className="min-h-[225px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
               />
             </div>
             <div className="flex items-center space-x-2">

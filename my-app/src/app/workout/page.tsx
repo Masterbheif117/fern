@@ -323,7 +323,7 @@ export default function Workout() {
                     content: (
                       <div className="space-y-4 text-sm md:text-base">
                         <div>
-                          <strong className="text-white">Exercises:</strong>
+                          <strong className="text-[#2f2226]">Exercises:</strong>
                           <ul className="list-disc list-inside mt-1">
                             {details.exercises.map((exercise, idx) => (
                               <li key={idx}>
@@ -334,7 +334,7 @@ export default function Workout() {
                           </ul>
                         </div>
                         <p>
-                          <strong className="text-white">Notes:</strong> {details.notes}
+                          <strong className="text-[#2f2226]">Notes:</strong> {details.notes}
                         </p>
                       </div>
                     ),
