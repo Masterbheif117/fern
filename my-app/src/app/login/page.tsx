@@ -46,8 +46,8 @@ export default function LoginPage() {
     const token = btoa(JSON.stringify({ username })) // Fake token for demo
     document.cookie = `token=${token}; path=/; max-age=3600;` // 1-hour expiration
 
-    // Redirect to dashboard
-    router.push("/dashboard")
+    // Redirect to profile
+    router.push("/profile")
   }
 
   return (

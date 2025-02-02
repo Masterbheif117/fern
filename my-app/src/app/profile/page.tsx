@@ -80,7 +80,7 @@ export default function ProfilePage() {
       />
 
       <div className="bg-white bg-opacity-15 backdrop-filter backdrop-blur-md border border-white border-opacity-30 rounded-3xl p-8 max-w-lg w-full mx-auto relative z-10">
-        <h1 className="text-3xl font-mono font-thin mb-6 text-[#2f2226] text-center">User Profile</h1>
+        <h1 className="text-3xl font-mono font-thin mb-6 text-[#2f2226] text-center">Your Profile</h1>
 
         <div className="flex space-x-2 mb-4">
           <div className="flex-1">
@@ -182,7 +182,7 @@ export default function ProfilePage() {
           onClick={() => router.push("/dashboard")}
           className="w-full bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-8 rounded-full hover:bg-opacity-80 transition-colors duration-300"
         >
-          Back to Dashboard
+          To Dashboard
         </button>
       </div>
     </div>

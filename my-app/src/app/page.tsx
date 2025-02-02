@@ -146,6 +146,10 @@ export default function Page() {
             <li>
               <a
                 href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.scrollTo({ top: 0, behavior: "smooth" })
+                }}
                 className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
               >
                 Home
@@ -153,7 +157,15 @@ export default function Page() {
             </li>
             <li>
               <a
-                href={isLoggedIn ? "/dashboard" : "#about"}
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (!isLoggedIn) {
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })
+                  } else {
+                    window.location.href = "/dashboard"
+                  }
+                }}
                 className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
               >
                 {isLoggedIn ? "Dashboard" : "About"}

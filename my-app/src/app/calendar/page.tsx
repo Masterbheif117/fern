@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, Download, Home, LogOut } from "lucide-react"
+import { ChevronLeft, ChevronRight, Download, LogOut } from "lucide-react"
 import Link from "next/link"
 import * as React from "react"
 import jsPDF from "jspdf"
@@ -259,7 +259,13 @@ export default function Dashboard() {
             className="w-full h-auto"
           />
         </div>
-        <h1 className="text-xl font-mono font-thin text-[#2f2226] mb-6">Welcome, {username}!</h1>
+        <h1 className="text-xl font-mono font-thin text-[#2f2226] mb-6">
+          Welcome, {username}!
+        </h1>
+        <h1 className="text-xl font-mono font-thin text-[#2f2226] mb-6">
+          Today's date is{" "}
+          {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}.
+        </h1>
         <div className="flex-grow"></div>
         <button
           onClick={exportMonthToPDF}
@@ -269,11 +275,11 @@ export default function Dashboard() {
           Export Month
         </button>
         <Link
-          href="/"
+          href="/dashboard"
           className="mb-4 flex items-center justify-center bg-white text-[#2f2226] font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
         >
-          <Home className="mr-2" size={20} />
-          Back to Home
+          <ChevronLeft className="mr-2" size={20} />
+          Dashboard
         </Link>
         <button
           onClick={() => {
