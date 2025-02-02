@@ -21,7 +21,6 @@ export default function Diet() {
   const [goal, setGoal] = useState("");
   const [cuisinePreferences, setCuisinePreferences] = useState<string[]>([]);
 
-  // Map for cuisine flags
   const cuisineFlagMap: { [key: string]: string } = {
     Chinese: "/china.png",
     French: "/france.png",
