@@ -41,10 +41,11 @@ export default function NewDashboard() {
   const DashboardBox = ({ title, icon, href }: { title: string; icon: React.ReactNode; href: string }) => (
     <Link
       href={href}
-      className="flex flex-col items-center justify-center p-6 backdrop-blur-md bg-white bg-opacity-20 rounded-3xl shadow-lg hover:bg-opacity-30 transition-all duration-300 border border-[#97a683]/30"
+      className="relative flex flex-col items-center justify-center p-6 backdrop-blur-md bg-white bg-opacity-50 rounded-3xl shadow-lg hover:bg-opacity-60 transition-all duration-300 border border-[#97a683]/30 group"
     >
-      <div className="mb-4 text-[#2f2226] w-12 h-12 relative">{icon}</div>
-      <h2 className="text-xl font-mono font-thin text-[#2f2226]">{title}</h2>
+      <div className="mb-4 text-[#2f2226] w-12 h-12 relative z-10">{icon}</div>
+      <h2 className="text-xl font-mono font-thin text-[#2f2226] z-10">{title}</h2>
+      <div className="absolute inset-0 bg-[#5a7247] opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-3xl transform translate-x-1 translate-y-1"></div>
     </Link>
   )
 

@@ -395,7 +395,7 @@ export default function Dashboard() {
                 className="rounded text-[#2f2226] focus:ring-[#2f2226]"
               />
               <label htmlFor="periodCheckbox" className="text-sm font-mono font-thin text-[#2f2226]">
-                Mark as period day
+                Mark as on period
               </label>
             </div>
           </div>
