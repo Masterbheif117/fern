@@ -48,26 +48,35 @@ export default function NewDashboard() {
   )
 
   return authenticated ? (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#97a683]/60 via-[#97a683]/30 to-white">
-      <main className="flex-grow flex flex-col items-center justify-center p-8 relative">
-        {/* Back to Home button */}
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        backgroundImage:
+          "url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bgdash-tkWpfFocEsJwQggAqCUMtkz0e47UQo.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Header */}
+      <header className="flex justify-between items-center fixed top-6 left-6 right-6 z-10">
         <Link
           href="/"
-          className="absolute top-4 left-4 flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
+          className="flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
         >
           <ChevronLeft className="mr-2" size={20} />
           Back to Home
         </Link>
-
-        {/* Logout button */}
         <button
           onClick={handleLogout}
-          className="absolute top-4 right-4 flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
+          className="flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
         >
           <LogOut className="mr-2" size={20} />
           Logout
         </button>
+      </header>
 
+      {/* Main content */}
+      <main className="flex-grow flex flex-col items-center justify-center p-8">
         <h1 className="text-4xl font-mono font-thin text-[#2f2226] mb-12 text-center">Welcome, {username}!</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 w-full max-w-4xl">
           <DashboardBox title="Meal Planner" icon={<Utensils />} href="/meal" />

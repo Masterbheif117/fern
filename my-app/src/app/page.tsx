@@ -153,10 +153,10 @@ export default function Page() {
             </li>
             <li>
               <a
-                href="/dashboard"
+                href={isLoggedIn ? "/dashboard" : "#about"}
                 className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
               >
-                Dashboard
+                {isLoggedIn ? "Dashboard" : "About"}
               </a>
             </li>
             {!isLoggedIn && (
