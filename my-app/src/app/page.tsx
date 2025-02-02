@@ -1,21 +1,21 @@
 "use client"
 
 import Image from "next/image"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, User, LogOut } from "lucide-react"
 import { useRef, useEffect, useState } from "react"
 
 const bounceAnimation = `
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-      transform: translateY(0);
-    }
-    40% {
-      transform: translateY(-10px);
-    }
-    60% {
-      transform: translateY(-5px);
-    }
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
   }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
 `
 
 const features = [
@@ -24,12 +24,27 @@ const features = [
   { title: "Symptom Tracker", description: "Monitor and analyze your PCOS symptoms." },
 ]
 
+const words = ["Nurture", "Balance", "Growth"]
+
 export default function Page() {
   const aboutRef = useRef<HTMLDivElement>(null)
   const [isAboutVisible, setIsAboutVisible] = useState(false)
+  const [tagline, setTagline] = useState("")
+  const [wordIndex, setWordIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const scrollToAbout = () => {
     aboutRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const handleLogout = () => {
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
+    localStorage.removeItem("currentUser")
+    setIsLoggedIn(false)
+    // Optionally, you can redirect to the home page or login page
+    // window.location.href = "/"
   }
 
   useEffect(() => {
@@ -44,6 +59,49 @@ export default function Page() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  useEffect(() => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1]
+    setIsLoggedIn(!!token)
+  }, [])
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    const currentWord = words[wordIndex]
+
+    const animateTagline = () => {
+      if (isPaused) {
+        return
+      }
+
+      setTagline((prev) => {
+        if (!isDeleting && prev === currentWord) {
+          setIsPaused(true)
+          setTimeout(() => {
+            setIsPaused(false)
+            setIsDeleting(true)
+          }, 3000)
+          return prev
+        }
+        if (isDeleting && prev === "") {
+          setIsDeleting(false)
+          setWordIndex((prevIndex) => (prevIndex + 1) % words.length)
+          return ""
+        }
+
+        const targetLength = isDeleting ? prev.length - 1 : prev.length + 1
+        return currentWord.substring(0, targetLength)
+      })
+    }
+
+    const intervalDuration = isDeleting ? 50 : 150
+    timer = setInterval(animateTagline, intervalDuration)
+
+    return () => clearInterval(timer)
+  }, [wordIndex, isDeleting, isPaused])
+
   return (
     <>
       <style jsx>{bounceAnimation}</style>
@@ -56,6 +114,16 @@ export default function Page() {
           backgroundPosition: "center",
         }}
       >
+        {/* Decorative line frame overlay */}
+        <div
+          className="absolute inset-0 z-50 pointer-events-none"
+          style={{
+            backgroundImage:
+              "url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/lineframe-i2YFpjEaL78XnSiM7TKUy0r69m9sFx.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
         {/* Large centered background logo with low opacity */}
         <div className="absolute inset-0 flex items-center justify-center translate-y-10 pointer-events-none">
           <Image
@@ -70,7 +138,9 @@ export default function Page() {
 
         {/* Navigation bar */}
         <nav
-          className={`fixed top-8 left-1/2 transform -translate-x-1/2 ${isAboutVisible ? "bg-[#2f2226]" : "bg-white bg-opacity-15 backdrop-filter backdrop-blur-md"} border border-white border-opacity-30 rounded-full px-10 py-4 z-30 transition-colors duration-300`}
+          className={`fixed top-8 left-1/2 transform -translate-x-[48%] ${
+            isAboutVisible ? "bg-[#2f2226]" : "bg-white bg-opacity-15 backdrop-filter backdrop-blur-md"
+          } border border-white border-opacity-30 rounded-full px-10 py-4 z-30 transition-colors duration-300`}
         >
           <ul className="flex items-center space-x-12">
             <li>
@@ -83,32 +153,53 @@ export default function Page() {
             </li>
             <li>
               <a
-                href="#about"
+                href="/dashboard"
                 className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
               >
-                About
+                Dashboard
               </a>
             </li>
+            {!isLoggedIn && (
+              <li>
+                <a
+                  href="/signup"
+                  className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
+                >
+                  Register
+                </a>
+              </li>
+            )}
             <li>
-              <a
-                href="/signup"
-                className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
-              >
-                Register
-              </a>
-            </li>
-            <li>
-              <a
-                href="/login"
-                className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
-              >
-                Login
-              </a>
+              {isLoggedIn ? (
+                <div className="flex items-center space-x-8">
+                  <a
+                    href="/profile"
+                    className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300 flex items-center"
+                  >
+                    <User className="mr-2" size={20} />
+                    My Profile
+                  </a>
+                  <button
+                    onClick={handleLogout}
+                    className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300 flex items-center"
+                  >
+                    <LogOut className="mr-2" size={20} />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <a
+                  href="/login"
+                  className="text-white font-mono font-thin text-lg md:text-xl hover:opacity-75 transition-opacity duration-300"
+                >
+                  Login
+                </a>
+              )}
             </li>
           </ul>
         </nav>
 
-        <div className="w-[97.65625%] max-w-[390px] mb-8 relative z-10">
+        <div className="w-[97.65625%] max-w-[390px] mb-8 relative z-10 ml-8">
           <Image
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/fernlogowhite-rsTpCgl74GhXANk8FNjt3jRRBZ1OwM.png"
             alt="Fern"
@@ -118,12 +209,18 @@ export default function Page() {
             className="w-full h-auto"
           />
         </div>
-        <p className="text-white font-mono font-thin text-center text-xl md:text-3xl max-w-[90%] tracking-wide leading-relaxed mb-8 relative z-10 mx-auto">
-          Nurture, balance, and grow through PCOS.
+        <p className="text-white font-mono font-thin text-center text-xl md:text-3xl max-w-[90%] tracking-wide leading-relaxed mb-8 relative z-10 mx-auto flex justify-center">
+          <span className="inline-flex justify-end" style={{ width: "180px" }}>
+            <span>{tagline}</span>
+          </span>
+          <span className="inline-flex" style={{ width: "20px" }}></span>
+          <span>through</span>
+          <span className="inline-flex" style={{ width: "20px" }}></span>
+          <span>PCOS.</span>
         </p>
         <button
           onClick={scrollToAbout}
-          className="bg-[#2f2226] text-white font-mono font-thin text-lg md:text-xl py-2 px-8 rounded-full hover:bg-opacity-80 transition-colors duration-300 relative z-10 mx-auto block"
+          className="bg-[#2f2226] text-white font-mono font-thin text-lg md:text-xl py-2 px-8 rounded-full hover:bg-opacity-80 transition-colors duration-300 relative z-10 ml-6 block"
         >
           Learn More
         </button>

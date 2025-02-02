@@ -1,78 +1,87 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+"use client"
 
-export default function Dashboard() {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [userInput, setUserInput] = useState(""); // Stores user notes
-  const [username, setUsername] = useState(""); // Stores logged-in user
-  const router = useRouter();
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { User, LogOut, Utensils, Dumbbell, Calendar, ChevronLeft } from "lucide-react"
+import type React from "react"
+
+export default function NewDashboard() {
+  const [authenticated, setAuthenticated] = useState(false)
+  const [username, setUsername] = useState("")
+  const router = useRouter()
 
   useEffect(() => {
-    // Get token from cookies
-    const token = document.cookie.split("; ").find(row => row.startsWith("token="))?.split("=")[1];
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1]
 
     if (!token) {
-      router.push("/login"); // Redirect if not logged in
+      router.push("/login")
     } else {
-      setAuthenticated(true);
+      setAuthenticated(true)
       try {
-        const decoded = JSON.parse(atob(token)); // Decode token (since we used btoa)
-        setUsername(decoded.username);
-
-        // Save the current user in localStorage
-        localStorage.setItem("currentUser", decoded.username);
+        const decoded = JSON.parse(atob(token))
+        setUsername(decoded.username)
+        localStorage.setItem("currentUser", decoded.username)
       } catch (error) {
-        console.error("Error decoding token:", error);
+        console.error("Error decoding token:", error)
       }
     }
-  }, []);
+  }, [router])
 
-  // Load saved notes when username is set
-  useEffect(() => {
-    const savedUsername = localStorage.getItem("currentUser");
-    if (savedUsername) {
-      setUsername(savedUsername);
-      const savedNotes = localStorage.getItem(`notes_${savedUsername}`);
-      if (savedNotes !== null) {
-        setUserInput(savedNotes);
-      }
-    }
-  }, []);
+  const handleLogout = () => {
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
+    localStorage.removeItem("currentUser")
+    router.push("/login")
+  }
 
-  // Save user notes in localStorage whenever they change
-  useEffect(() => {
-    if (username) {
-      localStorage.setItem(`notes_${username}`, userInput);
-    }
-  }, [userInput, username]);
+  const DashboardBox = ({ title, icon, href }: { title: string; icon: React.ReactNode; href: string }) => (
+    <Link
+      href={href}
+      className="flex flex-col items-center justify-center p-6 backdrop-blur-md bg-white bg-opacity-20 rounded-3xl shadow-lg hover:bg-opacity-30 transition-all duration-300 border border-[#97a683]/30"
+    >
+      <div className="text-4xl mb-4 text-[#2f2226]">{icon}</div>
+      <h2 className="text-xl font-mono font-thin text-[#2f2226]">{title}</h2>
+    </Link>
+  )
 
   return authenticated ? (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Welcome, {username}!</h1>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#97a683]/60 via-[#97a683]/30 to-white">
+      <main className="flex-grow flex flex-col items-center justify-center p-8 relative">
+        {/* Back to Home button */}
+        <Link
+          href="/"
+          className="absolute top-4 left-4 flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
+        >
+          <ChevronLeft className="mr-2" size={20} />
+          Back to Home
+        </Link>
 
-      {/* User Notes Input */}
-      <div className="mt-4">
-        <label className="block text-lg font-semibold">Your Notes:</label>
-        <textarea
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Type something here..."
-          className="border p-2 w-full h-32"
-        />
-      </div>
+        {/* Logout button */}
+        <button
+          onClick={handleLogout}
+          className="absolute top-4 right-4 flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
+        >
+          <LogOut className="mr-2" size={20} />
+          Logout
+        </button>
 
-      {/* Logout Button */}
-      <button
-        onClick={() => {
-          document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"; // Clear token
-          localStorage.removeItem("currentUser"); // Remove saved username
-          router.push("/login");
-        }}
-        className="mt-4 bg-red-500 text-white p-2"
-      >
-        Logout
-      </button>
+        <h1 className="text-4xl font-mono font-thin text-[#2f2226] mb-12 text-center">Welcome, {username}!</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 w-full max-w-4xl">
+          <DashboardBox title="Meal Planner" icon={<Utensils />} href="/meal" />
+          <DashboardBox title="Fitness Planner" icon={<Dumbbell />} href="/workout" />
+          <DashboardBox title="Symptom Tracker" icon={<Calendar />} href="/calendar" />
+        </div>
+        <Link
+          href="/profile"
+          className="mt-8 bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-8 rounded-full hover:bg-opacity-80 transition-colors duration-300 flex items-center"
+        >
+          <User className="mr-2" size={20} />
+          My Profile
+        </Link>
+      </main>
     </div>
-  ) : null;
+  ) : null
 }
