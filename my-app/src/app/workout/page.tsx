@@ -85,14 +85,15 @@ export default function Workout() {
         backgroundPosition: "center",
       }}
     >
-      <Link
-        href="/dashboard"
-        className="absolute top-6 left-6 flex items-center bg-[#2f2226] text-white font-mono font-thin text-sm py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300 z-20"
-      >
-        <ChevronLeft className="mr-2" size={16} />
-        Back to Dashboard
-      </Link>
-      {/* Decorative line frame overlay */}
+    <header className="flex justify-between items-center fixed top-6 left-6 right-6 z-10">
+        <Link
+          href="/dashboard"
+          className="flex items-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300"
+        >
+          <ChevronLeft className="mr-2" size={20} />
+          Back to Dashboard
+        </Link>
+        </header>
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={{

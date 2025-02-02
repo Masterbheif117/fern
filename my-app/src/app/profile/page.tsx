@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { ChevronLeft } from "lucide-react"
 
 export default function ProfilePage() {
   const [username, setUsername] = useState("")
@@ -78,6 +80,14 @@ export default function ProfilePage() {
           backgroundPosition: "center",
         }}
       />
+
+      <Link
+        href="/"
+        className="absolute top-4 left-4 flex items-center justify-center bg-[#2f2226] text-white font-mono font-thin text-lg py-2 px-4 rounded-full hover:bg-opacity-80 transition-colors duration-300 z-20"
+      >
+        <ChevronLeft className="mr-2" size={20} />
+        Back to Home
+      </Link>
 
       <div className="bg-white bg-opacity-15 backdrop-filter backdrop-blur-md border border-white border-opacity-30 rounded-3xl p-8 max-w-lg w-full mx-auto relative z-10">
         <h1 className="text-3xl font-mono font-thin mb-6 text-[#2f2226] text-center">Your Profile</h1>

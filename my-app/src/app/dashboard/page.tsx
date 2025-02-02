@@ -58,7 +58,6 @@ export default function NewDashboard() {
         backgroundPosition: "center",
       }}
     >
-      {/* Header */}
       <header className="flex justify-between items-center fixed top-6 left-6 right-6 z-10">
         <Link
           href="/"
@@ -90,7 +89,7 @@ export default function NewDashboard() {
                 className="object-contain"
               />
             }
-            href="/meal"
+            href="/diet"
           />
           <DashboardBox
             title="Fitness Planner"
