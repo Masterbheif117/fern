@@ -369,21 +369,21 @@ export default function Dashboard() {
           </h3>
           <div className="flex-grow space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#2f2226] mb-1">Physical Notes:</label>
+              <label className="block text-sm font-mono font-thin text-[#2f2226] mb-1">Physical Notes:</label>
               <Textarea
                 value={physicalNotes}
                 onChange={(e) => setPhysicalNotes(e.target.value)}
-                placeholder="Write your physical notes for this day..."
-                className="min-h-[100px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
+                placeholder="Log your physical notes for this day such as cramps, nausea, breakouts, etc."
+                className="min-h-[200px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#2f2226] mb-1">Emotional Notes:</label>
+              <label className="block text-sm font-mono font-thin text-[#2f2226] mb-1">Emotional Notes:</label>
               <Textarea
                 value={emotionalNotes}
                 onChange={(e) => setEmotionalNotes(e.target.value)}
-                placeholder="Write your emotional notes for this day..."
-                className="min-h-[100px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
+                placeholder="Log your emotional notes for this day such as mood swings, hormonal imbalances, etc."
+                className="min-h-[200px] bg-white bg-opacity-50 border-none text-[#2f2226] placeholder-[#2f2226]/50 font-mono font-thin resize-none w-full"
               />
             </div>
             <div className="flex items-center space-x-2">
@@ -394,7 +394,7 @@ export default function Dashboard() {
                 onChange={(e) => setIsPeriod(e.target.checked)}
                 className="rounded text-[#2f2226] focus:ring-[#2f2226]"
               />
-              <label htmlFor="periodCheckbox" className="text-sm font-medium text-[#2f2226]">
+              <label htmlFor="periodCheckbox" className="text-sm font-mono font-thin text-[#2f2226]">
                 Mark as period day
               </label>
             </div>

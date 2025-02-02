@@ -24,7 +24,7 @@ export default function Diet() {
   const cuisineFlagMap: { [key: string]: string } = {
     Chinese: "/china.png",
     French: "/france.png",
-    Mediterranean: "/mediterranean.png",
+    Greek: "/greek.png",
     Indian: "/india.png",
     Italian: "/italy.png",
     Japanese: "/japan.png",

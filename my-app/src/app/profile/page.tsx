@@ -22,7 +22,7 @@ export default function ProfilePage() {
     "Indian",
     "Chinese",
     "Japanese",
-    "Mediterranean",
+    "Greek",
     "French",
     "Thai",
     "Korean",
