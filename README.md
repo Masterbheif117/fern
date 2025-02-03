@@ -1,28 +1,70 @@
 
-###Inspiration
+# Fern  
+Winner for best UI/UX at Hackviolet 2025
+## 🌿 Inspiration  
 
-Polycystic ovary syndrome (PCOS) is a common condition that affects your hormones. It causes numerous physical, hormonal/emotional complications, such as irregular menstrual periods, excess hair growth/loss, acne, mood swings, etc. People with PCOS may be at higher risk for certain health conditions, like diabetes and high blood pressure as well. Our team member has PCOS, so she was able to speak from personal experience. PCOS is surprisingly common, and even more surprisingly, it is frequently undiagnosed and untreated.
+Polycystic Ovary Syndrome (PCOS) is a common hormonal disorder that affects millions of people worldwide. It can lead to various physical, hormonal, and emotional complications, including irregular menstrual cycles, excessive hair growth or loss, acne, mood swings, and increased risks of conditions like diabetes and high blood pressure.  
 
-##What it does
+One of our team members has firsthand experience with PCOS, which gave us unique insights into the challenges it presents. Despite how common PCOS is, it often goes undiagnosed and untreated. Our goal with **Fern** is to provide a practical, supportive solution for managing PCOS through personalized nutrition, fitness, and symptom tracking.  
 
-Our app has three main features, a PCOS catered meal planner that creates recipes of authentic foods (cuisine of your choice!) that cater towards PCOS nutrition needs, such as insulin/magnesium deficiencies, as well as replacing ingredients that may be harmful. Fern also offers a PCOS specific fitness planner tailored towards the users goals, age, weight, etc. Lastly, Fern has a daily symptom tracker/journal that logs physical and emotional changes/symptoms that can be exported at the end of each month as a PDF to be shown to a physician/gynecologist (can double as a period tracker as well). This is for recognizing patterns/triggers as well as specific timings.
+---
 
-##How we built it
+## 🌱 What Fern Does  
 
-We used Next.js, Typescript, Javascript, JWT for auth, jpdf for exporting data as a pdf, and fun fact, our teammate Nivisha actually hand-drew almost half of all of our components, including the logo, flowers, ferns, plants, icons, etc.
+Fern offers three core features designed to help users manage PCOS holistically:  
 
-##Challenges we ran into
+### 🥗 PCOS-Friendly Meal Planner  
+- Generates personalized meal plans and recipes tailored to PCOS nutritional needs (e.g., addressing insulin resistance and magnesium deficiencies).  
+- Allows users to select their preferred cuisine while automatically replacing potentially harmful ingredients.  
 
-Coming up with a design that wasn't too in your face about female empowerment but a more unisex, mature design that properly addresses the sensitive topic that is PCOS.
+### 🏋️‍♀️ PCOS-Specific Fitness Planner  
+- Creates workout plans based on the user’s goals, age, weight, and fitness level.  
+- Focuses on exercises that support hormonal balance and overall well-being.  
 
-##Accomplishments that we're proud of
+### 📖 Symptom Tracker & Journal  
+- Logs daily physical and emotional symptoms.  
+- Identifies patterns, triggers, and trends over time.  
+- Exports data as a **PDF report** at the end of each month for easy sharing with a physician or gynecologist.  
+- Can also double as a **period tracker** for cycle monitoring.  
 
-In 24 hours we managed to flesh out all of our core features, polish the UI, and cover edge cases.
+---
 
-##What we learned
+## 🔧 How We Built It  
 
-How to handle user auth and keep a persistent state of data. Our teammate learned web development for the first time as well.
+- **Tech Stack:** Next.js, TypeScript, JavaScript  
+- **Authentication:** JWT  
+- **Data Exporting:** jPDF (for generating PDF reports)  
+- **Design:** Half of our visual components—including the logo, flowers, ferns, plants, and icons—were hand-drawn by our teammate, Nivisha!  
 
-##What's next for Fern
+---
 
-Some sort of community aspect could be implemented.
+## 🚧 Challenges We Faced  
+
+- Designing an interface that **strikes a balance** between being informative and inclusive while addressing the sensitive nature of PCOS.  
+- Ensuring the **UI/UX** was mature, gender-neutral, and welcoming to all users.  
+
+---
+
+## 🎉 Accomplishments We're Proud Of  
+
+- Building a fully functional **MVP** with all core features in just **24 hours**.  
+- Creating a **polished UI** with thoughtful user experience.  
+- Covering **edge cases** to ensure smooth app performance.  
+
+---
+
+## 📚 What We Learned  
+
+- Implementing **user authentication** and maintaining **persistent state** for data.  
+- One of our teammates learned **web development** for the first time while working on Fern!  
+
+---
+
+## 🚀 What's Next for Fern  
+
+- Adding a **community aspect**, such as forums or chat groups, to foster shared experiences and support among users.  
+- Further refining personalization options for meal and fitness plans.  
+
+---
+
+Fern is more than just an app—it’s a step toward **empowering** those with PCOS to take control of their health in a way that’s accessible, personalized, and effective.  
